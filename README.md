@@ -1,23 +1,49 @@
 # k8s-mpi
 
-OpenMPI applications running on Kubernetes using the MPI Operator.
+MPI applications (OpenMPI and MPICH) running on Kubernetes using the MPI Operator.
 
 ## Project Structure
 
 ```
 k8s-mpi/
-├── README.md
-└── openmpi/
-    ├── Dockerfile              # OpenMPI container image
+├── README.md                   # This file
+├── doc/                        # Documentation
+│   ├── openmpi.md             # OpenMPI specific guide
+│   └── mpich.md               # MPICH specific guide
+├── openmpi/                   # OpenMPI Hello World example
+│   ├── Dockerfile
+│   ├── src/
+│   │   └── mpi_hello_world.c
+│   ├── manifests/
+│   │   ├── namespace.yaml
+│   │   ├── mpijob.yaml
+│   │   └── kustomization.yaml
+│   └── scripts/
+│       └── build.sh
+└── mpich/                     # MPICH Pi calculation example
+    ├── Dockerfile
     ├── src/
-    │   └── mpi_hello_world.c   # MPI application source code
+    │   └── pi.cc
     ├── manifests/
-    │   ├── namespace.yaml      # Kubernetes namespace
-    │   ├── mpijob.yaml         # MPIJob configuration
-    │   └── kustomization.yaml  # Kustomize configuration
+    │   ├── namespace.yaml
+    │   ├── mpijob.yaml
+    │   └── kustomization.yaml
     └── scripts/
-        └── build.sh            # Docker image build script
+        └── build.sh
 ```
+
+## Examples
+
+### OpenMPI Hello World
+Simple MPI hello world application demonstrating basic distributed execution.
+
+### MPICH Pi Calculation
+Monte Carlo method to calculate π using distributed computing.
+
+## Documentation
+
+- [OpenMPI Guide](doc/openmpi.md) - Detailed OpenMPI setup and usage
+- [MPICH Guide](doc/mpich.md) - Detailed MPICH setup and usage
 
 ## Prerequisites
 
