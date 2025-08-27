@@ -14,7 +14,7 @@ spec:
       template:
         spec:
           containers:
-          - image: mpioperator/mpi-pi:mpich 
+          - image: k8sschool/mpich-pi 
             imagePullPolicy: Always
             name: mpi-launcher
             securityContext:
@@ -33,7 +33,7 @@ spec:
       template:
         spec:
           containers:
-          - image: mpioperator/mpi-pi:mpich
+          - image: k8sschool/mpich-pi 
             imagePullPolicy: Always
             name: mpi-worker
             securityContext:
