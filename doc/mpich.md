@@ -45,6 +45,9 @@ cd mpich
 kubectl apply -k manifests/
 ```
 
+See https://github.com/kubeflow/mpi-operator/tree/master/build/base
+and https://github.com/kubeflow/mpi-operator/blob/master/examples/v2beta1/pi/mpich.Dockerfile
+
 ### 3. Check Results
 
 ```bash
@@ -96,7 +99,7 @@ Unlike OpenMPI example that may run as root, MPICH example:
 ### Container Structure
 
 **Launcher:**
-- Executes `mpirun -n 2 /project/pi`
+- Executes `mpirun -n 2 /home/mpiuser/pi`
 - Coordinates distributed calculation
 - Collects and displays final result
 
