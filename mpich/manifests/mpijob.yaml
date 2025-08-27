@@ -14,7 +14,7 @@ spec:
       template:
         spec:
           containers:
-          - image: k8sschool/mpich-pi:latest
+          - image: mpioperator/mpi-pi:mpich 
             imagePullPolicy: Always
             name: mpi-launcher
             securityContext:
@@ -23,7 +23,7 @@ spec:
             - mpirun
             - -n
             - "2"
-            - /project/pi
+            - /home/mpiuser/pi
             resources:
               limits:
                 cpu: 1
@@ -33,7 +33,7 @@ spec:
       template:
         spec:
           containers:
-          - image: k8sschool/mpich-pi:latest
+          - image: mpioperator/mpi-pi:mpich
             imagePullPolicy: Always
             name: mpi-worker
             securityContext:
