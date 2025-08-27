@@ -1,0 +1,18 @@
+# Build artifacts
+*.o
+*.exe
+mpi_hello_world
+
+# Docker
+.dockerignore
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

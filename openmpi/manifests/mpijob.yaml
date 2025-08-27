@@ -1,0 +1,52 @@
+apiVersion: kubeflow.org/v2beta1
+kind: MPIJob
+metadata:
+  name: openmpi-job
+spec:
+  slotsPerWorker: 1
+  runPolicy:
+    cleanPodPolicy: Running
+  mpiReplicaSpecs:
+    Launcher:
+      replicas: 1
+      template:
+        spec:
+          hostname: mpich-master
+          containers:
+          - name: mpich-launcher
+            image: k8sschool/openmpi
+            command: ["mpirun"]
+            args: ["-np", "3", "--allow-run-as-root", "-bind-to", "none", "-map-by", "slot", "-mca", "pml", "ob1", "-mca", "btl", "^openib", "./mpi_hello_world"]
+            ports:
+            - containerPort: 2000
+              name: mpi
+            securityContext:
+              runAsUser: 0
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "250m"
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
+          restartPolicy: Never
+    Worker:
+      replicas: 3
+      template:
+        spec:
+          containers:
+          - name: mpich-worker
+            image: k8sschool/openmpi
+            ports:
+            - containerPort: 2000
+              name: mpi
+            securityContext:
+              runAsUser: 0
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "250m"
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
+          restartPolicy: Never
