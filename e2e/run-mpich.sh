@@ -19,7 +19,9 @@ export CIUX_IMAGE_NAME=$(echo $CIUX_IMAGE_URL | cut -d':' -f1)
 export CIUX_IMAGE_TAG=$(echo $CIUX_IMAGE_URL | cut -d':' -f2)
 
 # Deploy MPICH job
-envsubst < $PROJECT_DIR/mpich/manifests/kustomization.yaml | kubectl apply -k - --dry-run=client -o yaml | kubectl apply -f -
+# Generate kustomization.yaml from template
+envsubst < $PROJECT_DIR/mpich/manifests/kustomization.yaml.tpl > $PROJECT_DIR/mpich/manifests/kustomization.yaml
+kubectl apply -k $PROJECT_DIR/mpich/manifests
 
 # Wait for job completion
 kubectl wait --for=condition=Succeeded mpijob/mpich-pi-job -n mpich-cluster --timeout="${job_timeout}s"
