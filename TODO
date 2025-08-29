@@ -1,1 +1,2 @@
+checkout and improve what is in doc/
 Change imagepullpolicy to ifnotpresent on CI, but not on dev
