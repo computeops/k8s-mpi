@@ -28,8 +28,6 @@ Complete automated testing workflow using ciux and ktbx:
 ### Prerequisites
 ```bash
 # Install dependencies
-./e2e/ignite.sh
-
 # Setup Kubernetes cluster and MPI operator
 ./e2e/prereq.sh
 ```
