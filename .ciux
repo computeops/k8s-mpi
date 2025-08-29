@@ -10,6 +10,6 @@ dependencies:
   - package: github.com/k8s-school/ktbx@v1.1.4-rc4
     labels:
       itest: "true"
-  - package: github.com/k8s-school/ink@v0.1.1
+  - package: github.com/k8s-school/ink@v0.0.1-rc5
     labels:
       itest: "true"
