@@ -1,0 +1,1 @@
+Change imagepullpolicy to ifnotpresent on CI, but not on dev

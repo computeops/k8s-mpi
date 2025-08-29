@@ -39,7 +39,7 @@ jobs:
 
     - name: Push images to kind cluster
       run: |
-        ./e2e/push-image.sh -k
+        ./e2e/push-image.sh -k -d
 
     - name: Install MPI Operator
       run: |
