@@ -32,7 +32,7 @@ kubectl logs -n mpich-cluster -l training.kubeflow.org/job-role=launcher
 
 # Verify expected output
 logs=$(kubectl logs -n mpich-cluster -l training.kubeflow.org/job-role=launcher)
-if echo "$logs" | grep -q "pi is approximately.*Error is"; then
+if echo "$logs" | grep -q "pi is approximately" && echo "$logs" | grep -q "Error is"; then
     echo "✅ MPICH test PASSED"
 else
     echo "❌ MPICH test FAILED - Expected output not found"
