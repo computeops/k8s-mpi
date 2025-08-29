@@ -30,8 +30,6 @@ if ! kubectl wait --for=condition=Succeeded mpijob/openmpi-job -n openmpi-cluste
     kubectl get pods -n openmpi-cluster
     echo "Job status:"
     kubectl describe mpijob/openmpi-job -n openmpi-cluster
-    echo "Pod logs:"
-    kubectl logs -n openmpi-cluster --all-containers=true --prefix=true
     exit 1
 fi
 

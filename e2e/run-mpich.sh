@@ -30,8 +30,6 @@ if ! kubectl wait --for=condition=Succeeded mpijob/mpich-pi-job -n mpich-cluster
     kubectl get pods -n mpich-cluster
     echo "Job status:"
     kubectl describe mpijob/mpich-pi-job -n mpich-cluster
-    echo "Pod logs:"
-    kubectl logs -n mpich-cluster --all-containers=true --prefix=true
     exit 1
 fi
 
