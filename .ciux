@@ -1,0 +1,15 @@
+apiVersion: v1alpha1
+registry: k8sschool
+sourcePathes:
+  - .ciux
+  - mpich/Dockerfile
+  - mpich/src
+  - openmpi/Dockerfile
+  - openmpi/src
+dependencies:
+  - package: github.com/k8s-school/ktbx@v1.1.4-rc4
+    labels:
+      itest: "true"
+  - package: github.com/k8s-school/ink@v0.1.1
+    labels:
+      itest: "true"

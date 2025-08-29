@@ -2,36 +2,6 @@
 
 MPI applications (OpenMPI and MPICH) running on Kubernetes using the MPI Operator.
 
-## Project Structure
-
-```
-k8s-mpi/
-├── README.md                   # This file
-├── doc/                        # Documentation
-│   ├── openmpi.md             # OpenMPI specific guide
-│   └── mpich.md               # MPICH specific guide
-├── openmpi/                   # OpenMPI Hello World example
-│   ├── Dockerfile
-│   ├── src/
-│   │   └── mpi_hello_world.c
-│   ├── manifests/
-│   │   ├── namespace.yaml
-│   │   ├── mpijob.yaml
-│   │   └── kustomization.yaml
-│   └── scripts/
-│       └── build.sh
-└── mpich/                     # MPICH Pi calculation example
-    ├── Dockerfile
-    ├── src/
-    │   └── pi.cc
-    ├── manifests/
-    │   ├── namespace.yaml
-    │   ├── mpijob.yaml
-    │   └── kustomization.yaml
-    └── scripts/
-        └── build.sh
-```
-
 ## Examples
 
 ### OpenMPI Hello World
