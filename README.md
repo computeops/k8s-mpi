@@ -20,6 +20,7 @@ Monte Carlo method to calculate π using distributed computing.
 - Kubernetes cluster (>= 1.16)
 - Docker or compatible container runtime
 - kubectl configured for your cluster
+- Go 1.21.4 or later (for building and testing)
 
 ## End-to-End Testing
 
