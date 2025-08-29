@@ -14,4 +14,4 @@ commonLabels:
 images:
   - name: k8sschool/mpich-pi
     newName: ${CIUX_IMAGE_NAME}
-    newTag: ${CIUX_IMAGE_TAG}
+    newTag: "${CIUX_IMAGE_TAG}"
