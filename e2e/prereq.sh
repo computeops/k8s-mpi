@@ -12,7 +12,7 @@ PROJECT_DIR=$(cd "$DIR/.."; pwd -P)
 go install github.com/k8s-school/ciux@"$ciux_version"
 
 # Install dependencies using ciux
-ciux ignite -l itest "$DIR"
+ciux ignite -l itest "$PROJECT_DIR"
 
 # Get cluster name from ciux
 cluster_name=$(ciux get clustername $PROJECT_DIR)
