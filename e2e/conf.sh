@@ -2,8 +2,7 @@
 
 # Configuration for MPI e2e tests
 
-ciux_version="v0.0.4-rc10"
-ktbx_version="v1.1.4-rc4"
+ciux_version="v0.0.5-rc4"
 
 # MPI Operator version
 mpi_operator_version="v0.6.0"

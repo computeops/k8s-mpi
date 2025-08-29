@@ -9,43 +9,43 @@ on:
 jobs:
   e2e-test:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-      
+
     - name: Set up Kubernetes cluster
       uses: helm/kind-action@v1.10.0
       with:
         cluster_name: mpi-test
-        
-    - name: Build MPI images
-      run: |
-        ./e2e/build.sh
-        
+
     - name: Setup prerequisites
       run: |
         ./e2e/prereq.sh
-        
+
+    - name: Build MPI images
+      run: |
+        ./e2e/build.sh
+
     - name: Push images to kind cluster
       run: |
         ./e2e/push-image.sh -k
-        
+
     - name: Install MPI Operator
       run: |
         ./e2e/install-mpi-operator.sh
-        
+
     - name: Run MPICH E2E tests
       run: |
         ./e2e/run-mpich.sh
-        
+
     - name: Run OpenMPI E2E tests
       run: |
         ./e2e/run-openmpi.sh
-        
+
     - name: Cleanup
       if: always()
       run: |
