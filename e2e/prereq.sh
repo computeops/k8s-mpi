@@ -18,7 +18,7 @@ ciux ignite -l itest "$PROJECT_DIR"
 cluster_name=$(ciux get clustername $PROJECT_DIR)
 
 # Create Kubernetes cluster using ktbx
-ktbx create --name $cluster_name
+ktbx create -s --name $cluster_name
 
 # Wait for cluster to be ready
 kubectl wait --for=condition=Ready nodes --all --timeout=300s
