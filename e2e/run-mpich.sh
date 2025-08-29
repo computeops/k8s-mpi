@@ -24,7 +24,16 @@ envsubst < $PROJECT_DIR/mpich/manifests/kustomization.yaml.tpl > $PROJECT_DIR/mp
 kubectl apply -k $PROJECT_DIR/mpich/manifests
 
 # Wait for job completion
-kubectl wait --for=condition=Succeeded mpijob/mpich-pi-job -n mpich-cluster --timeout="${job_timeout}s"
+if ! kubectl wait --for=condition=Succeeded mpijob/mpich-pi-job -n mpich-cluster --timeout="${job_timeout}s"; then
+    echo "Job failed to complete, debugging..."
+    echo "Pods in mpich-cluster namespace:"
+    kubectl get pods -n mpich-cluster
+    echo "Job status:"
+    kubectl describe mpijob/mpich-pi-job -n mpich-cluster
+    echo "Pod logs:"
+    kubectl logs -n mpich-cluster --all-containers=true --prefix=true
+    exit 1
+fi
 
 # Get logs
 echo "MPICH job completed. Logs:"

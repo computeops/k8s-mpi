@@ -24,7 +24,16 @@ envsubst < $PROJECT_DIR/openmpi/manifests/kustomization.yaml.tpl > $PROJECT_DIR/
 kubectl apply -k $PROJECT_DIR/openmpi/manifests
 
 # Wait for job completion
-kubectl wait --for=condition=Succeeded mpijob/openmpi-job -n openmpi-cluster --timeout="${job_timeout}s"
+if ! kubectl wait --for=condition=Succeeded mpijob/openmpi-job -n openmpi-cluster --timeout="${job_timeout}s"; then
+    echo "Job failed to complete, debugging..."
+    echo "Pods in openmpi-cluster namespace:"
+    kubectl get pods -n openmpi-cluster
+    echo "Job status:"
+    kubectl describe mpijob/openmpi-job -n openmpi-cluster
+    echo "Pod logs:"
+    kubectl logs -n openmpi-cluster --all-containers=true --prefix=true
+    exit 1
+fi
 
 # Get logs
 echo "OpenMPI job completed. Logs:"

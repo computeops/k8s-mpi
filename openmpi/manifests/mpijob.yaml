@@ -11,9 +11,9 @@ spec:
       replicas: 1
       template:
         spec:
-          hostname: mpich-master
+          hostname: openmpi-master
           containers:
-          - name: mpich-launcher
+          - name: openmpi-launcher
             image: k8sschool/openmpi
             command: ["mpirun"]
             args: ["-np", "3", "--allow-run-as-root", "-bind-to", "none", "-map-by", "slot", "-mca", "pml", "ob1", "-mca", "btl", "^openib", "./mpi_hello_world"]
@@ -35,7 +35,7 @@ spec:
       template:
         spec:
           containers:
-          - name: mpich-worker
+          - name: openmpi-worker
             image: k8sschool/openmpi
             ports:
             - containerPort: 2000
