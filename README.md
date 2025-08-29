@@ -28,9 +28,9 @@ Complete automated testing workflow using ciux and ktbx:
 
 ### Prerequisites
 ```bash
-# Install dependencies
-# Setup Kubernetes cluster and MPI operator
+# Install dependencies and MPI operator
 ./e2e/prereq.sh
+./e2e/install-mpi-operator.sh
 ```
 
 ### Build and Deploy
@@ -60,13 +60,6 @@ Complete automated testing workflow using ciux and ktbx:
 ./e2e/cleanup.sh
 ```
 
-## Manual Quick Start
-
-### Install MPI Operator
-
-```bash
-kubectl apply --server-side -f https://raw.githubusercontent.com/kubeflow/mpi-operator/v0.6.0/deploy/v2beta1/mpi-operator.yaml
-```
 
 ## References
 
