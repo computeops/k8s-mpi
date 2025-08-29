@@ -14,8 +14,12 @@ echo "Testing MPICH Pi calculation..."
 # Use ciux to get MPICH image URL with suffix
 $(ciux get image --check $PROJECT_DIR --suffix "mpich" --env)
 
+# Extract image name and tag for kustomize
+export CIUX_IMAGE_NAME=$(echo $CIUX_IMAGE_URL | cut -d':' -f1)
+export CIUX_IMAGE_TAG=$(echo $CIUX_IMAGE_URL | cut -d':' -f2)
+
 # Deploy MPICH job
-kubectl apply -k manifests/
+envsubst < $PROJECT_DIR/mpich/manifests/kustomization.yaml | kubectl apply -k - --dry-run=client -o yaml | kubectl apply -f -
 
 # Wait for job completion
 kubectl wait --for=condition=Succeeded mpijob/mpich-pi-job -n mpich-cluster --timeout="${job_timeout}s"
@@ -33,7 +37,4 @@ else
     exit 1
 fi
 
-# Clean up
-kubectl delete -k manifests/
-
-echo "MPICH test completed successfully"
+echo "MPICH job completed successfully"

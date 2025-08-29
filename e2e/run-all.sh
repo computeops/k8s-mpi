@@ -11,10 +11,16 @@ echo "🚀 Starting MPI e2e tests..."
 # Setup environment
 $DIR/prereq.sh
 
+# Build images
+$DIR/build.sh
+
+# Push images (add -k for kind development)
+$DIR/push-image.sh
+
 # Run OpenMPI test
-$DIR/test-openmpi.sh
+$DIR/run-openmpi.sh
 
 # Run MPICH test
-$DIR/test-mpich.sh
+$DIR/run-mpich.sh
 
 echo "✅ All MPI e2e tests completed successfully!"

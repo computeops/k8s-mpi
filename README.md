@@ -21,7 +21,47 @@ Monte Carlo method to calculate π using distributed computing.
 - Docker or compatible container runtime
 - kubectl configured for your cluster
 
-## Quick Start
+## End-to-End Testing
+
+Complete automated testing workflow using ciux and ktbx:
+
+### Prerequisites
+```bash
+# Install dependencies
+./e2e/ignite.sh
+
+# Setup Kubernetes cluster and MPI operator
+./e2e/prereq.sh
+```
+
+### Build and Deploy
+```bash
+# Build container images (with ciux optimization)
+./e2e/build.sh
+
+# Push images to registry or load into kind cluster
+# For kind development: ./e2e/push-image.sh -k
+# For registry: ./e2e/push-image.sh
+./e2e/push-image.sh
+```
+
+### Run Tests
+```bash
+# Run individual MPI implementations
+./e2e/run-mpich.sh
+./e2e/run-openmpi.sh
+
+# Or run complete workflow
+./e2e/run-all.sh
+```
+
+### Cleanup
+```bash
+# Automatically detect and clean up resources
+./e2e/cleanup.sh
+```
+
+## Manual Quick Start
 
 ### Install MPI Operator
 
