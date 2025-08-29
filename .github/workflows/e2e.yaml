@@ -13,6 +13,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      # required by ciux to get git history
+      with:
+        fetch-depth: 0
 
     - uses: actions/setup-go@v3
       with:
