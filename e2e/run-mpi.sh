@@ -60,6 +60,13 @@ if ! kubectl wait --for=condition=Succeeded mpijob/$JOB_NAME -n $NAMESPACE --tim
     kubectl get pods -n $NAMESPACE
     echo "Job status:"
     kubectl describe mpijob/$JOB_NAME -n $NAMESPACE
+    
+    echo "Logs from all pods:"
+    for pod in $(kubectl get pods -n $NAMESPACE -o name); do
+        echo "=== Logs for $pod ==="
+        kubectl logs -n $NAMESPACE $pod --all-containers=true || echo "Failed to get logs for $pod"
+    done
+    
     exit 1
 fi
 
