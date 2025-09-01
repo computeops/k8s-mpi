@@ -32,6 +32,10 @@ jobs:
     - name: Setup prerequisites
       run: |
         ./e2e/prereq.sh
+    
+    - name: Install MPI Operator
+      run: |
+        ./e2e/install-mpi-operator.sh
 
     - name: Build MPI images
       run: |
@@ -40,10 +44,6 @@ jobs:
     - name: Push images to kind cluster
       run: |
         ./e2e/push-image.sh -k -d
-
-    - name: Install MPI Operator
-      run: |
-        ./e2e/install-mpi-operator.sh
 
     - name: Run MPICH E2E tests
       run: |

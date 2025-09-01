@@ -10,14 +10,13 @@ echo "🚀 Starting MPI e2e tests..."
 
 # Setup environment
 $DIR/prereq.sh
+$DIR/install-mpi-operator.sh
 
 # Build images
 $DIR/build.sh
 
 # Push images (add -k for kind development)
 $DIR/push-image.sh
-
-$DIR/install-mpi-operator.sh
 
 # Run OpenMPI test
 $DIR/run-mpi.sh openmpi
