@@ -17,6 +17,8 @@ $DIR/build.sh
 # Push images (add -k for kind development)
 $DIR/push-image.sh
 
+$DIR/install-mpi-operator.sh
+
 # Run OpenMPI test
 $DIR/run-mpi.sh openmpi
 

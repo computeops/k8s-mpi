@@ -6,6 +6,7 @@ spec:
   slotsPerWorker: 1
   runPolicy:
     cleanPodPolicy: Running
+    activeDeadlineSeconds: 300
   mpiReplicaSpecs:
     Launcher:
       replicas: 1
