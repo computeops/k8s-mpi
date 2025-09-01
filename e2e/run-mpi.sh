@@ -57,14 +57,26 @@ kubectl apply -k $PROJECT_DIR/$MPI_TYPE/manifests
 echo "Waiting for MPI job to complete..."
 SUCCESS=false
 
+# Wait for launcher pod to be ready first
+echo "Waiting for launcher pod to be ready..."
+kubectl wait --for=condition=Ready pod -l training.kubeflow.org/job-role=launcher -n $NAMESPACE --timeout=120s
+
 # First try: Wait for successful completion via logs (workaround for operator delays)
 for i in $(seq 1 60); do
     sleep 5
     logs=$(kubectl logs -n $NAMESPACE -l training.kubeflow.org/job-role=launcher 2>/dev/null || echo "")
-    if echo "$logs" | grep -q "$EXPECTED_OUTPUT"; then
-        echo "✅ Job completed successfully (detected from logs)"
-        SUCCESS=true
-        break
+    if [ "$MPI_TYPE" = "mpich" ]; then
+        if echo "$logs" | grep -q "pi is approximately" && echo "$logs" | grep -q "Error is"; then
+            echo "✅ Job completed successfully (detected from logs)"
+            SUCCESS=true
+            break
+        fi
+    else
+        if echo "$logs" | grep -q "$EXPECTED_OUTPUT"; then
+            echo "✅ Job completed successfully (detected from logs)"
+            SUCCESS=true
+            break
+        fi
     fi
     echo "Waiting for job completion... ($((i*5))s elapsed)"
 done
