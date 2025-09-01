@@ -18,9 +18,9 @@ $DIR/build.sh
 $DIR/push-image.sh
 
 # Run OpenMPI test
-$DIR/run-openmpi.sh
+$DIR/run-mpi.sh openmpi
 
 # Run MPICH test
-$DIR/run-mpich.sh
+$DIR/run-mpi.sh mpich
 
 echo "✅ All MPI e2e tests completed successfully!"

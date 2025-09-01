@@ -47,11 +47,11 @@ jobs:
 
     - name: Run MPICH E2E tests
       run: |
-        ./e2e/run-mpich.sh
+        ./e2e/run-mpi.sh mpich
 
     - name: Run OpenMPI E2E tests
       run: |
-        ./e2e/run-openmpi.sh
+        ./e2e/run-mpi.sh openmpi
 
     - name: Cleanup
       if: always()
