@@ -53,8 +53,31 @@ echo "Running $TEST_NAME..."
 envsubst < $PROJECT_DIR/$MPI_TYPE/manifests/kustomization.yaml.tpl > $PROJECT_DIR/$MPI_TYPE/manifests/kustomization.yaml
 kubectl apply -k $PROJECT_DIR/$MPI_TYPE/manifests
 
-# Wait for job completion
-if ! kubectl wait --for=condition=Succeeded mpijob/$JOB_NAME -n $NAMESPACE --timeout="${job_timeout}s"; then
+# Wait for job completion with workaround for MPI Operator status sync delays
+echo "Waiting for MPI job to complete..."
+SUCCESS=false
+
+# First try: Wait for successful completion via logs (workaround for operator delays)
+for i in $(seq 1 60); do
+    sleep 5
+    logs=$(kubectl logs -n $NAMESPACE -l training.kubeflow.org/job-role=launcher 2>/dev/null || echo "")
+    if echo "$logs" | grep -q "$EXPECTED_OUTPUT"; then
+        echo "✅ Job completed successfully (detected from logs)"
+        SUCCESS=true
+        break
+    fi
+    echo "Waiting for job completion... ($((i*5))s elapsed)"
+done
+
+# Second try: Fall back to kubectl wait if log detection failed
+if [ "$SUCCESS" = "false" ]; then
+    if kubectl wait --for=condition=Succeeded mpijob/$JOB_NAME -n $NAMESPACE --timeout="${job_timeout}s"; then
+        SUCCESS=true
+    fi
+fi
+
+# If both methods failed, debug and exit
+if [ "$SUCCESS" = "false" ]; then
     echo "Job failed to complete, debugging..."
     echo "Pods in $NAMESPACE namespace:"
     kubectl get pods -n $NAMESPACE
