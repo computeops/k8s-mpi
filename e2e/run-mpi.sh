@@ -64,6 +64,10 @@ fi
 
 echo "Running $TEST_NAME..."
 
+# Delete namespace if it exists
+echo "Deleting namespace $NAMESPACE if it exists..."
+kubectl delete namespace -l "kubernetes.io/metadata.name=$NAMESPACE" --wait=true
+
 # Deploy MPI job
 # Generate kustomization.yaml from template
 envsubst < $PROJECT_DIR/$MPI_TYPE/manifests/kustomization.yaml.tpl > $PROJECT_DIR/$MPI_TYPE/manifests/kustomization.yaml

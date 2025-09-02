@@ -47,8 +47,8 @@ Complete automated testing workflow using ciux and ktbx:
 ### Run Tests
 ```bash
 # Run individual MPI implementations
-./e2e/run-mpich.sh
-./e2e/run-openmpi.sh
+./e2e/run-mpi.sh mpi
+./e2e/run-mpi.sh openmpi
 
 # Or run complete workflow
 ./e2e/run-all.sh
