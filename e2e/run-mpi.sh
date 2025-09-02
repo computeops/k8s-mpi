@@ -77,8 +77,7 @@ SUCCESS=false
 echo "Waiting for launcher pod to be created..."
 for i in $(seq 1 24); do
     if kubectl get pod -l training.kubeflow.org/job-role=launcher -n $NAMESPACE 2>/dev/null | grep -q launcher; then
-        echo "Launcher pod found, waiting for ready state..."
-        kubectl wait --for=condition=Ready pod -l training.kubeflow.org/job-role=launcher -n $NAMESPACE --timeout=120s
+        echo "Launcher pod found"
         break
     fi
     sleep 5
