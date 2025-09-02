@@ -9,7 +9,7 @@ check_logs() {
     local mpi_type=$1
     local namespace="${mpi_type}-cluster"
     local logs=$(kubectl logs -n $namespace -l training.kubeflow.org/job-role=launcher 2>/dev/null || echo "")
-    
+
     if [ "$mpi_type" = "mpich" ]; then
         if echo "$logs" | grep -q "pi is approximately" && echo "$logs" | grep -q "Error is"; then
             return 0
@@ -55,12 +55,10 @@ export CIUX_IMAGE_TAG=$(echo $CIUX_IMAGE_URL | cut -d':' -f2)
 if [ "$MPI_TYPE" = "mpich" ]; then
     NAMESPACE="mpich-cluster"
     JOB_NAME="mpich-pi-job"
-    EXPECTED_OUTPUT="pi is approximately.*Error is"
     TEST_NAME="MPICH Pi calculation"
 else
     NAMESPACE="openmpi-cluster"
     JOB_NAME="openmpi-job"
-    EXPECTED_OUTPUT="Hello world from processor.*rank.*out of.*processors"
     TEST_NAME="OpenMPI Hello World"
 fi
 
@@ -90,28 +88,18 @@ done
 # First try: Wait for successful completion via logs (workaround for operator delays)
 for i in $(seq 1 60); do
     sleep 5
-    logs=$(kubectl logs -n $NAMESPACE -l training.kubeflow.org/job-role=launcher 2>/dev/null || echo "")
-    if [ "$MPI_TYPE" = "mpich" ]; then
-        if echo "$logs" | grep -q "pi is approximately" && echo "$logs" | grep -q "Error is"; then
-            echo "✅ Job completed successfully (detected from logs)"
-            SUCCESS=true
-            break
-        fi
-    else
-        if echo "$logs" | grep -q "$EXPECTED_OUTPUT"; then
-            echo "✅ Job completed successfully (detected from logs)"
-            SUCCESS=true
-            break
-        fi
+    if check_logs $MPI_TYPE; then
+        echo "✅ Job completed successfully (detected from logs)"
+        SUCCESS=true
+        break
     fi
     echo "Waiting for job completion... ($((i*5))s elapsed)"
 done
 
-# Second try: Fall back to kubectl wait if log detection failed
-if [ "$SUCCESS" = "false" ]; then
-    if kubectl wait --for=condition=Succeeded mpijob/$JOB_NAME -n $NAMESPACE --timeout="${job_timeout}s"; then
-        SUCCESS=true
-    fi
+if kubectl wait --for=condition=Succeeded mpijob/$JOB_NAME -n $NAMESPACE --timeout="${job_timeout}s"; then
+    echo "✅ mpijob/$JOB_NAME in 'Succeeded' state"
+else
+    echo "⚠️ kubectl wait failed or timed out"
 fi
 
 # If both methods failed, debug and exit
@@ -121,13 +109,13 @@ if [ "$SUCCESS" = "false" ]; then
     kubectl get pods -n $NAMESPACE
     echo "Job status:"
     kubectl describe mpijob/$JOB_NAME -n $NAMESPACE
-    
+
     echo "Logs from all pods:"
     for pod in $(kubectl get pods -n $NAMESPACE -o name); do
         echo "=== Logs for $pod ==="
         kubectl logs -n $NAMESPACE $pod --all-containers=true || echo "Failed to get logs for $pod"
     done
-    
+
     exit 1
 fi
 
@@ -135,13 +123,3 @@ fi
 echo "$TEST_NAME completed. Logs:"
 kubectl logs -n $NAMESPACE -l training.kubeflow.org/job-role=launcher
 
-# Verify expected output
-logs=$(kubectl logs -n $NAMESPACE -l training.kubeflow.org/job-role=launcher)
-if echo "$logs" | grep -q "$EXPECTED_OUTPUT"; then
-    echo "✅ $MPI_TYPE test PASSED"
-else
-    echo "❌ $MPI_TYPE test FAILED - Expected output not found"
-    exit 1
-fi
-
-echo "$MPI_TYPE job completed successfully"
