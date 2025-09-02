@@ -4,6 +4,24 @@
 
 set -euxo pipefail
 
+# Function to check if logs contain expected output
+check_logs() {
+    local mpi_type=$1
+    local namespace="${mpi_type}-cluster"
+    local logs=$(kubectl logs -n $namespace -l training.kubeflow.org/job-role=launcher 2>/dev/null || echo "")
+    
+    if [ "$mpi_type" = "mpich" ]; then
+        if echo "$logs" | grep -q "pi is approximately" && echo "$logs" | grep -q "Error is"; then
+            return 0
+        fi
+    else
+        if echo "$logs" | grep -q "Hello world from processor.*rank.*out of.*processors"; then
+            return 0
+        fi
+    fi
+    return 1
+}
+
 # Check if MPI type is provided
 if [ $# -eq 0 ]; then
     echo "Usage: $0 <mpi-type>"
