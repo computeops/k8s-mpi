@@ -10,15 +10,11 @@ check_logs() {
     local namespace="${mpi_type}-cluster"
     local logs=$(kubectl logs -n $namespace -l training.kubeflow.org/job-role=launcher 2>/dev/null || echo "")
 
-    if [ "$mpi_type" = "mpich" ]; then
-        if echo "$logs" | grep -q "pi is approximately" && echo "$logs" | grep -q "Error is"; then
-            return 0
-        fi
-    else
-        if echo "$logs" | grep -q "Hello world from processor.*rank.*out of.*processors"; then
-            return 0
-        fi
+
+    if echo "$logs" | grep -q "pi is approximately" && echo "$logs" | grep -q "Error is"; then
+        return 0
     fi
+
     return 1
 }
 
@@ -68,7 +64,7 @@ if [ "$MPI_TYPE" = "mpich" ]; then
 else
     NAMESPACE="openmpi-cluster"
     JOB_NAME="openmpi-job"
-    TEST_NAME="OpenMPI Hello World"
+    TEST_NAME="OpenMPI Pi calculation"
 fi
 
 echo "Running $TEST_NAME..."

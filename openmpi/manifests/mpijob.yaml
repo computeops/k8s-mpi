@@ -23,8 +23,8 @@ spec:
             args:
               - mpirun
               - -n
-              - "2"
-              - /home/mpiuser/mpi_hello_world
+              - "3"
+              - /home/mpiuser/pi
             resources:
               requests:
                 memory: "256Mi"
