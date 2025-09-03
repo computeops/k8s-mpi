@@ -25,8 +25,8 @@ check_logs() {
 # Function to diagnose current state
 diagnose() {
     echo "Checking job status..."
-    kubectl get pods -n $NAMESPACE
-    kubectl get svc -n $NAMESPACE
+    kubectl get pods -n $NAMESPACE -o wide
+    kubectl get svc -n $NAMESPACE -o wide
     kubectl get endpoints -n $NAMESPACE
     kubectl describe mpijob $JOB_NAME -n $NAMESPACE
 }

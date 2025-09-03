@@ -7,6 +7,7 @@ spec:
   runPolicy:
     cleanPodPolicy: Running
     activeDeadlineSeconds: 300
+  mpiImplementation: OpenMPI
   mpiReplicaSpecs:
     Launcher:
       replicas: 1
@@ -15,14 +16,11 @@ spec:
           hostname: openmpi-master
           containers:
           - name: openmpi-launcher
+          securityContext:
+            runAsUser: 1000
             image: k8sschool/openmpi
             command: ["mpirun"]
-            args: ["-np", "3", "--allow-run-as-root", "-bind-to", "none", "-map-by", "slot", "-mca", "pml", "ob1", "-mca", "btl", "^openib", "./mpi_hello_world"]
-            ports:
-            - containerPort: 2000
-              name: mpi
-            securityContext:
-              runAsUser: 0
+            args: ["-np", "3", "./mpi_hello_world"]
             resources:
               requests:
                 memory: "256Mi"
@@ -38,11 +36,14 @@ spec:
           containers:
           - name: openmpi-worker
             image: k8sschool/openmpi
-            ports:
-            - containerPort: 2000
-              name: mpi
             securityContext:
-              runAsUser: 0
+              runAsUser: 1000
+            command:
+            - /usr/sbin/sshd
+            args:
+            - -De
+            - -f
+            - /home/mpiuser/.sshd_config
             resources:
               requests:
                 memory: "256Mi"
