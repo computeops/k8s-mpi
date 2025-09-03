@@ -16,8 +16,8 @@ spec:
           hostname: openmpi-master
           containers:
           - name: openmpi-launcher
-          securityContext:
-            runAsUser: 1000
+            securityContext:
+              runAsUser: 1000
             image: k8sschool/openmpi
             command: ["mpirun"]
             args: ["-np", "3", "./mpi_hello_world"]
@@ -28,7 +28,6 @@ spec:
               limits:
                 memory: "512Mi"
                 cpu: "500m"
-          restartPolicy: Never
     Worker:
       replicas: 3
       template:
@@ -51,4 +50,3 @@ spec:
               limits:
                 memory: "512Mi"
                 cpu: "500m"
-          restartPolicy: Never
