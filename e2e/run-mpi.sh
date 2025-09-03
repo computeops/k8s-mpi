@@ -91,6 +91,8 @@ done
 # First try: Wait for successful completion via logs (workaround for operator delays)
 for i in $(seq 1 60); do
     sleep 5
+    echo "Checking job status..."
+    kubectl get pods -n $NAMESPACE
     if check_logs $MPI_TYPE; then
         echo "✅ Job completed successfully (detected from logs)"
         SUCCESS=true
