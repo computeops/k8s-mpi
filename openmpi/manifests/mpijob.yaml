@@ -20,7 +20,11 @@ spec:
               runAsUser: 1000
             image: k8sschool/openmpi
             command: ["mpirun"]
-            args: ["-np", "3", "./mpi_hello_world"]
+            args:
+              - mpirun
+              - -n
+              - "2"
+              - /home/mpiuser/mpi_hello_world
             resources:
               requests:
                 memory: "256Mi"
