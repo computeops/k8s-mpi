@@ -22,7 +22,6 @@ spec:
             image: k8sschool/openmpi
             command: ["mpirun"]
             args:
-              - mpirun
               - -n
               - "2"
               - /home/mpiuser/pi
