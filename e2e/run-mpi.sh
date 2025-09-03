@@ -22,6 +22,15 @@ check_logs() {
     return 1
 }
 
+# Function to diagnose current state
+diagnose() {
+    echo "Checking job status..."
+    kubectl get pods -n $NAMESPACE
+    kubectl get svc -n $NAMESPACE
+    kubectl get endpoints -n $NAMESPACE
+    kubectl describe mpijob $JOB_NAME -n $NAMESPACE
+}
+
 # Check if MPI type is provided
 if [ $# -eq 0 ]; then
     echo "Usage: $0 <mpi-type>"
@@ -91,8 +100,7 @@ done
 # First try: Wait for successful completion via logs (workaround for operator delays)
 for i in $(seq 1 60); do
     sleep 5
-    echo "Checking job status..."
-    kubectl get pods -n $NAMESPACE
+    diagnose
     if check_logs $MPI_TYPE; then
         echo "✅ Job completed successfully (detected from logs)"
         SUCCESS=true
@@ -120,7 +128,6 @@ if [ "$SUCCESS" = "false" ]; then
         echo "=== Logs for $pod ==="
         kubectl logs -n $NAMESPACE $pod --all-containers=true || echo "Failed to get logs for $pod"
     done
-
     exit 1
 fi
 
