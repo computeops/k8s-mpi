@@ -24,7 +24,7 @@ spec:
             args:
               - mpirun
               - -n
-              - "3"
+              - "2"
               - /home/mpiuser/pi
             resources:
               requests:
@@ -34,7 +34,7 @@ spec:
                 memory: "512Mi"
                 cpu: "500m"
     Worker:
-      replicas: 3
+      replicas: 2
       template:
         spec:
           containers:
