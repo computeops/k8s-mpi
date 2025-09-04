@@ -32,7 +32,7 @@ jobs:
     - name: Setup prerequisites
       run: |
         ./e2e/prereq.sh
-    
+
     - name: Install MPI Operator
       run: |
         ./e2e/install-mpi-operator.sh
@@ -47,13 +47,13 @@ jobs:
 
     - name: Run MPICH E2E tests
       run: |
-        ./e2e/run-mpi.sh mpich
+        ./e2e/run-mpi.sh mpich hello-world
         # Cleanup because of limited GHA resources
         kubectl delete ns mpich-cluster
 
     - name: Run OpenMPI E2E tests
       run: |
-        ./e2e/run-mpi.sh openmpi
+        ./e2e/run-mpi.sh openmpi pi
 
     - name: Cleanup
       if: always()
