@@ -19,7 +19,7 @@ spec:
           - name: openmpi-launcher
             securityContext:
               runAsUser: 1000
-            image: k8sschool/openmpi
+            image: k8sschool/k8s-mpi-openmpi
             command: ["mpirun"]
             args:
               - -n
@@ -38,7 +38,7 @@ spec:
         spec:
           containers:
           - name: openmpi-worker
-            image: k8sschool/openmpi
+            image: k8sschool/k8s-mpi-openmpi
             securityContext:
               runAsUser: 1000
             command:
