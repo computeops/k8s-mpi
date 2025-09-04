@@ -17,7 +17,7 @@ check_logs() {
         if echo "$logs" | grep -q "pi is approximately" && echo "$logs" | grep -q "Error is"; then
             return 0
         fi
-    elif [ "$program" = "hello-world" ]; then
+    elif [ "$program" = "hello_world" ]; then
         if echo "$logs" | grep -q "Hello world from processor.*rank.*out of.*processors"; then
             return 0
         fi
@@ -39,7 +39,7 @@ diagnose() {
 if [ $# -lt 2 ]; then
     echo "Usage: $0 <mpi-type> <program>"
     echo "  mpi-type: mpich or openmpi"
-    echo "  program: hello-world or pi"
+    echo "  program: hello_world or pi"
     exit 1
 fi
 
@@ -53,8 +53,8 @@ if [ "$MPI_TYPE" != "mpich" ] && [ "$MPI_TYPE" != "openmpi" ]; then
 fi
 
 # Validate program
-if [ "$PROGRAM" != "hello-world" ] && [ "$PROGRAM" != "pi" ]; then
-    echo "Error: Program must be 'hello-world' or 'pi'"
+if [ "$PROGRAM" != "hello_world" ] && [ "$PROGRAM" != "pi" ]; then
+    echo "Error: Program must be 'hello_world' or 'pi'"
     exit 1
 fi
 
