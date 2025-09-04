@@ -11,8 +11,16 @@ check_logs() {
     local logs=$(kubectl logs -n $namespace -l training.kubeflow.org/job-role=launcher 2>/dev/null || echo "")
 
 
-    if echo "$logs" | grep -q "pi is approximately" && echo "$logs" | grep -q "Error is"; then
-        return 0
+    # Check for different expected outputs based on program
+    local program=$2
+    if [ "$program" = "pi" ]; then
+        if echo "$logs" | grep -q "pi is approximately" && echo "$logs" | grep -q "Error is"; then
+            return 0
+        fi
+    elif [ "$program" = "hello-world" ]; then
+        if echo "$logs" | grep -q "Hello world from processor.*rank.*out of.*processors"; then
+            return 0
+        fi
     fi
 
     return 1
@@ -27,18 +35,26 @@ diagnose() {
     kubectl describe mpijob $JOB_NAME -n $NAMESPACE
 }
 
-# Check if MPI type is provided
-if [ $# -eq 0 ]; then
-    echo "Usage: $0 <mpi-type>"
+# Check if parameters are provided
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 <mpi-type> <program>"
     echo "  mpi-type: mpich or openmpi"
+    echo "  program: hello-world or pi"
     exit 1
 fi
 
 MPI_TYPE=$1
+PROGRAM=$2
 
 # Validate MPI type
 if [ "$MPI_TYPE" != "mpich" ] && [ "$MPI_TYPE" != "openmpi" ]; then
     echo "Error: MPI type must be 'mpich' or 'openmpi'"
+    exit 1
+fi
+
+# Validate program
+if [ "$PROGRAM" != "hello-world" ] && [ "$PROGRAM" != "pi" ]; then
+    echo "Error: Program must be 'hello-world' or 'pi'"
     exit 1
 fi
 
@@ -47,7 +63,7 @@ PROJECT_DIR=$(cd "$DIR/.."; pwd -P)
 
 . $DIR/conf.sh
 
-echo "Testing $MPI_TYPE..."
+echo "Testing $MPI_TYPE with $PROGRAM program..."
 
 # Use ciux to get MPI image URL with suffix
 $(ciux get image --check $PROJECT_DIR --suffix "$MPI_TYPE" --env)
@@ -55,6 +71,9 @@ $(ciux get image --check $PROJECT_DIR --suffix "$MPI_TYPE" --env)
 # Extract image name and tag for kustomize
 export CIUX_IMAGE_NAME=$(echo $CIUX_IMAGE_URL | cut -d':' -f1)
 export CIUX_IMAGE_TAG=$(echo $CIUX_IMAGE_URL | cut -d':' -f2)
+
+# Export program for use in templates
+export PROGRAM
 
 # Set MPI-specific variables
 if [ "$MPI_TYPE" = "mpich" ]; then
@@ -97,7 +116,7 @@ done
 for i in $(seq 1 60); do
     sleep 5
     diagnose
-    if check_logs $MPI_TYPE; then
+    if check_logs $MPI_TYPE $PROGRAM; then
         echo "✅ Job completed successfully (detected from logs)"
         SUCCESS=true
         break

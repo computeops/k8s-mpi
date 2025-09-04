@@ -20,11 +20,12 @@ spec:
             name: mpi-launcher
             securityContext:
               runAsUser: 1000
-            args:
+            command:
             - mpirun
+            args:
             - -n
             - "2"
-            - /home/mpiuser/hello_world
+            - /home/mpiuser/${PROGRAM}
             resources:
               limits:
                 cpu: 1
