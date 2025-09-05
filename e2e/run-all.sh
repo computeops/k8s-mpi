@@ -22,6 +22,6 @@ $DIR/push-image.sh
 $DIR/run-mpi.sh openmpi pi
 
 # Run MPICH test
-$DIR/run-mpi.sh mpich hello-world
+$DIR/run-mpi.sh mpich hello_world
 
 echo "✅ All MPI e2e tests completed successfully!"
