@@ -1,0 +1,33 @@
+mpiType: mpich  # mpich or openmpi
+program: pi     # pi or hello_world
+
+image:
+  name: k8sschool/k8s-mpi
+  tag: latest
+  pullPolicy: IfNotPresent
+
+job:
+  name: mpi-job
+  namespace: mpi-cluster
+  replicas: 2
+  slotsPerWorker: 1
+  
+resources:
+  launcher:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "1"
+  worker:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "1"
+  
+runPolicy:
+  cleanPodPolicy: Running
+  ttlSecondsAfterFinished: 60

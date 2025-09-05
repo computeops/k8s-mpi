@@ -1,0 +1,65 @@
+apiVersion: kubeflow.org/v2beta1
+kind: MPIJob
+metadata:
+  name: {{ .Values.job.name }}
+  namespace: {{ .Values.job.namespace }}
+spec:
+  slotsPerWorker: {{ .Values.job.slotsPerWorker }}
+  runPolicy:
+    cleanPodPolicy: {{ .Values.runPolicy.cleanPodPolicy }}
+    ttlSecondsAfterFinished: {{ .Values.runPolicy.ttlSecondsAfterFinished }}
+  {{- if eq .Values.mpiType "mpich" }}
+  mpiImplementation: MPICH
+  {{- else if eq .Values.mpiType "openmpi" }}
+  mpiImplementation: OpenMPI
+  {{- end }}
+  mpiReplicaSpecs:
+    Launcher:
+      replicas: 1
+      template:
+        spec:
+          containers:
+          - name: {{ .Values.mpiType }}-launcher
+            image: {{ .Values.image.name }}-{{ .Values.mpiType }}:{{ .Values.image.tag }}
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            securityContext:
+              runAsUser: 1000
+            args:
+              - mpirun
+              - -n
+              - "{{ .Values.job.replicas }}"
+              - /home/mpiuser/{{ .Values.program }}
+            resources:
+              requests:
+                memory: {{ .Values.resources.launcher.requests.memory }}
+                cpu: {{ .Values.resources.launcher.requests.cpu }}
+              limits:
+                memory: {{ .Values.resources.launcher.limits.memory }}
+                cpu: {{ .Values.resources.launcher.limits.cpu }}
+    Worker:
+      replicas: {{ .Values.job.replicas }}
+      template:
+        spec:
+          containers:
+          - name: {{ .Values.mpiType }}-worker
+            image: {{ .Values.image.name }}-{{ .Values.mpiType }}:{{ .Values.image.tag }}
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            securityContext:
+              runAsUser: 1000
+            command:
+            - /usr/sbin/sshd
+            args:
+            - -De
+            - -f
+            - /home/mpiuser/.sshd_config
+            readinessProbe:
+              tcpSocket:
+                port: 2222
+              initialDelaySeconds: 2
+            resources:
+              requests:
+                memory: {{ .Values.resources.worker.requests.memory }}
+                cpu: {{ .Values.resources.worker.requests.cpu }}
+              limits:
+                memory: {{ .Values.resources.worker.limits.memory }}
+                cpu: {{ .Values.resources.worker.limits.cpu }}

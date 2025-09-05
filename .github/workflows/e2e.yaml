@@ -37,9 +37,13 @@ jobs:
       run: |
         ./e2e/install-mpi-operator.sh
 
-    - name: Build MPI images
+    - name: Build MPICH image
       run: |
-        ./e2e/build.sh
+        ./build.sh mpich
+
+    - name: Build OpenMPI image
+      run: |
+        ./build.sh openmpi
 
     - name: Push images to kind cluster
       run: |
@@ -47,13 +51,13 @@ jobs:
 
     - name: Run MPICH E2E tests
       run: |
-        ./e2e/run-mpi.sh mpich hello_world
+        ./e2e/run-mpi-helm.sh mpich hello_world
         # Cleanup because of limited GHA resources
-        kubectl delete ns mpich-cluster
+        kubectl delete ns mpi-cluster
 
     - name: Run OpenMPI E2E tests
       run: |
-        ./e2e/run-mpi.sh openmpi pi
+        ./e2e/run-mpi-helm.sh openmpi pi
 
     - name: Cleanup
       if: always()
