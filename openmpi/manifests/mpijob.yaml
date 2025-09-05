@@ -14,7 +14,6 @@ spec:
       replicas: 1
       template:
         spec:
-          hostname: openmpi-master
           containers:
           - name: openmpi-launcher
             securityContext:
