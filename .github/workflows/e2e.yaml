@@ -47,7 +47,7 @@ jobs:
 
     - name: Run MPICH E2E tests
       run: |
-        ./e2e/run-mpi.sh mpich hello-world
+        ./e2e/run-mpi.sh mpich hello_world
         # Cleanup because of limited GHA resources
         kubectl delete ns mpich-cluster
 
