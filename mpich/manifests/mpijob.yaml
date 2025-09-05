@@ -1,7 +1,7 @@
 apiVersion: kubeflow.org/v2beta1
 kind: MPIJob
 metadata:
-  name: mpich-pi-job
+  name: mpich-job
 spec:
   slotsPerWorker: 1
   runPolicy:
@@ -20,12 +20,11 @@ spec:
             name: mpi-launcher
             securityContext:
               runAsUser: 1000
-            command:
-            - mpirun
             args:
-            - -n
-            - "2"
-            - /home/mpiuser/${PROGRAM}
+              - mpirun
+              - -n
+              - "2"
+              - /home/mpiuser/${PROGRAM}
             resources:
               limits:
                 cpu: 1

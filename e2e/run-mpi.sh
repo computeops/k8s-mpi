@@ -78,7 +78,7 @@ export PROGRAM
 # Set MPI-specific variables
 if [ "$MPI_TYPE" = "mpich" ]; then
     NAMESPACE="mpich-cluster"
-    JOB_NAME="mpich-pi-job"
+    JOB_NAME="mpich-job"
     TEST_NAME="MPICH Pi calculation"
 else
     NAMESPACE="openmpi-cluster"
