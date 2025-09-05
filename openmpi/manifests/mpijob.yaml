@@ -20,8 +20,8 @@ spec:
             securityContext:
               runAsUser: 1000
             image: k8sschool/k8s-mpi-openmpi
-            command: ["mpirun"]
             args:
+              - mpirun
               - -n
               - "2"
               - /home/mpiuser/${PROGRAM}
