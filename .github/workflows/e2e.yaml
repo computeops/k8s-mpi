@@ -45,20 +45,21 @@ jobs:
       run: |
         ./e2e/push-image.sh -k -d
 
-    - name: Run MPICH E2E test "hello_world"
-      run: |
-        ./e2e/run-mpi.sh mpich hello_world
     - name: Run MPICH E2E test "pi"
       run: |
         ./e2e/run-mpi.sh mpich pi
 
-    - name: Run OpenMPI E2E tests "hello_world"
+    - name: Run MPICH E2E test "hello_world"
       run: |
-        ./e2e/run-mpi.sh openmpi hello_world
+        ./e2e/run-mpi.sh mpich hello_world
 
     - name: Run OpenMPI E2E tests "pi"
       run: |
         ./e2e/run-mpi.sh openmpi pi
+
+    - name: Run OpenMPI E2E tests "hello_world"
+      run: |
+        ./e2e/run-mpi.sh openmpi hello_world
 
     - name: Cleanup
       if: always()
