@@ -124,13 +124,7 @@ for i in $(seq 1 60); do
     echo "Waiting for job completion... ($((i*5))s elapsed)"
 done
 
-if kubectl wait --for=condition=Succeeded mpijob/$JOB_NAME -n $NAMESPACE --timeout="${job_timeout}s"; then
-    echo "✅ mpijob/$JOB_NAME in 'Succeeded' state"
-else
-    echo "⚠️ kubectl wait failed or timed out"
-fi
-
-# If both methods failed, debug and exit
+# If failed, debug and exit
 if [ "$SUCCESS" = "false" ]; then
     echo "Job failed to complete, debugging..."
     echo "Pods in $NAMESPACE namespace:"
@@ -144,6 +138,13 @@ if [ "$SUCCESS" = "false" ]; then
         kubectl logs -n $NAMESPACE $pod --all-containers=true || echo "Failed to get logs for $pod"
     done
     exit 1
+fi
+
+# Check if job succeed (seems there is an mpi-operator issue here, job fail be Failed even if task succeed) 
+if kubectl wait --for=condition=Succeeded mpijob/$JOB_NAME -n $NAMESPACE --timeout="${job_timeout}s"; then
+    echo "✅ mpijob/$JOB_NAME in 'Succeeded' state"
+else
+    echo "⚠️ kubectl wait failed or timed out"
 fi
 
 # Get logs
