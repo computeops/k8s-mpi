@@ -4,22 +4,16 @@ MPI applications (OpenMPI and MPICH) running on Kubernetes using the MPI Operato
 
 ## Examples
 
-### OpenMPI Hello World
-Simple MPI hello world application demonstrating basic distributed execution.
-
-### MPICH Pi Calculation
-Monte Carlo method to calculate π using distributed computing.
+- **[OpenMPI Hello World](doc/openmpi.md)** - Simple distributed "Hello World" across 3 workers
+- **[MPICH Pi Calculation](doc/mpich.md)** - Monte Carlo π estimation using 2 workers
 
 ## Documentation
 
-- [OpenMPI Guide](doc/openmpi.md) - Detailed OpenMPI setup and usage
-- [MPICH Guide](doc/mpich.md) - Detailed MPICH setup and usage
+See [doc/README.md](doc/README.md) for complete guides and common operations.
 
 ## Prerequisites
 
-- Kubernetes cluster (>= 1.16)
 - Docker or compatible container runtime
-- kubectl configured for your cluster
 - Go 1.21.4 or later (for building and testing)
 
 ## End-to-End Testing
@@ -47,8 +41,8 @@ Complete automated testing workflow using ciux and ktbx:
 ### Run Tests
 ```bash
 # Run individual MPI implementations
-./e2e/run-mpi.sh mpi
-./e2e/run-mpi.sh openmpi
+./e2e/run-mpi.sh mpi pi
+./e2e/run-mpi.sh openmpi hello_world
 
 # Or run complete workflow
 ./e2e/run-all.sh

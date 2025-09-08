@@ -1,47 +1,21 @@
-# OpenMPI on Kubernetes
+# OpenMPI Hello World
 
-This guide covers the OpenMPI Hello World example using the MPI Operator.
+Simple MPI "Hello World" application demonstrating distributed execution across 3 worker nodes.
 
-## Overview
-
-The OpenMPI example demonstrates a simple MPI "Hello World" application that:
-- Runs 3 MPI processes across multiple worker nodes
-- Uses OpenMPI for communication
-- Shows basic distributed execution patterns
-
-## Architecture
-
-```
-Launcher Pod
-    └── mpirun command
-        ├── SSH to Worker 0 → Hello World Process (rank 0)
-        ├── SSH to Worker 1 → Hello World Process (rank 1)
-        └── SSH to Worker 2 → Hello World Process (rank 2)
-```
+See [main README](../README.md) for prerequisites and setup.
 
 ## Quick Start
 
-### 1. Install MPI Operator
-
 ```bash
-kubectl apply --server-side -f https://raw.githubusercontent.com/kubeflow/mpi-operator/v0.6.0/deploy/v2beta1/mpi-operator.yaml
-```
+# Build and deploy
+./e2e/build.sh
+./e2e/run-mpi.sh openmpi hello_world
 
-### 2. Build and Deploy
-
-```bash
-cd openmpi
-./scripts/build.sh
-kubectl apply -k manifests/
-```
-
-### 3. Check Results
-
-```bash
+# View results
 kubectl logs -n openmpi-cluster -l training.kubeflow.org/job-role=launcher
 ```
 
-Expected output:
+**Expected Output:**
 ```
 Hello world from processor openmpi-job-worker-0, rank 0 out of 3 processors
 Hello world from processor openmpi-job-worker-1, rank 1 out of 3 processors

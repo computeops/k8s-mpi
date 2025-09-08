@@ -1,14 +1,8 @@
-# MPICH on Kubernetes
+# MPICH Pi Calculation
 
-This guide covers the MPICH Pi calculation example using the MPI Operator.
+Monte Carlo π estimation using 2 MPI processes for distributed numerical computation.
 
-## Overview
-
-The MPICH example demonstrates a Monte Carlo π calculation that:
-- Uses 2 MPI processes to estimate π
-- Employs MPICH implementation
-- Shows distributed numerical computation
-- Based on the official MPI Operator pi example
+See [main README](../README.md) for prerequisites and setup.
 
 ## Algorithm
 
@@ -19,42 +13,18 @@ The Monte Carlo method estimates π by:
 
 Each MPI process generates 10,000,000 random points independently, then results are combined using `MPI_Reduce`.
 
-## Architecture
-
-```
-Launcher Pod (rank 0)
-    └── mpirun -n 2
-        ├── SSH to Worker 0 → Pi calculation process (rank 0)
-        ├── SSH to Worker 1 → Pi calculation process (rank 1)
-        └── Reduce results → Final π estimate
-```
-
 ## Quick Start
 
-### 1. Install MPI Operator
-
 ```bash
-kubectl apply --server-side -f https://raw.githubusercontent.com/kubeflow/mpi-operator/v0.6.0/deploy/v2beta1/mpi-operator.yaml
-```
+# Build and deploy
+./e2e/build.sh
+./e2e/run-mpi.sh mpich pi
 
-### 2. Build and Deploy
-
-```bash
-cd mpich
-./scripts/build.sh
-kubectl apply -k manifests/
-```
-
-See https://github.com/kubeflow/mpi-operator/tree/master/build/base
-and https://github.com/kubeflow/mpi-operator/blob/master/examples/v2beta1/pi/mpich.Dockerfile
-
-### 3. Check Results
-
-```bash
+# View results
 kubectl logs -n mpich-cluster -l training.kubeflow.org/job-role=launcher
 ```
 
-Expected output:
+**Expected Output:**
 ```
 pi is approximately 3.1416263514159734
 Error is 0.0000336920000599
