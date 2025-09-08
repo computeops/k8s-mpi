@@ -8,4 +8,4 @@ ciux_version="v0.0.5-rc4"
 mpi_operator_version="v0.6.0"
 
 # Test timeouts (in seconds)
-job_timeout=600
+job_timeout=300
