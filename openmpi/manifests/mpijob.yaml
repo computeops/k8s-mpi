@@ -46,6 +46,11 @@ spec:
             - -De
             - -f
             - /home/mpiuser/.sshd_config
+            readinessProbe:
+              tcpSocket:
+                port: 2222
+              initialDelaySeconds: 5
+              periodSeconds: 10
             resources:
               requests:
                 memory: "256Mi"
