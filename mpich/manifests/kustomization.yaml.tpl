@@ -5,7 +5,7 @@ resources:
   - namespace.yaml
   - mpijob.yaml
 
-namespace: mpich-cluster
+namespace: ${NAMESPACE}
 
 commonLabels:
   app: mpich

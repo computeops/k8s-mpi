@@ -7,7 +7,7 @@ set -euxo pipefail
 # Function to check if logs contain expected output
 check_logs() {
     local mpi_type=$1
-    local namespace="${mpi_type}-cluster"
+    local namespace="$NAMESPACE"
     local logs=$(kubectl logs -n $namespace -l training.kubeflow.org/job-role=launcher 2>/dev/null || echo "")
 
 
@@ -77,14 +77,15 @@ export PROGRAM
 
 # Set MPI-specific variables
 if [ "$MPI_TYPE" = "mpich" ]; then
-    NAMESPACE="mpich-cluster"
     JOB_NAME="mpich-job"
     TEST_NAME="MPICH Pi calculation"
 else
-    NAMESPACE="openmpi-cluster"
     JOB_NAME="openmpi-job"
     TEST_NAME="OpenMPI Pi calculation"
 fi
+
+pgm=$(echo $PROGRAM | tr '_' '-') # Replace underscores with hyphens for job name
+export NAMESPACE="${MPI_TYPE}-$pgm"
 
 echo "Running $TEST_NAME..."
 
@@ -140,7 +141,7 @@ if [ "$SUCCESS" = "false" ]; then
     exit 1
 fi
 
-# Check if job succeed (seems there is an mpi-operator issue here, job fail be Failed even if task succeed) 
+# Check if job succeed (seems there is an mpi-operator issue here, job fail be Failed even if task succeed)
 if kubectl wait --for=condition=Succeeded mpijob/$JOB_NAME -n $NAMESPACE --timeout="${job_timeout}s"; then
     echo "✅ mpijob/$JOB_NAME in 'Succeeded' state"
 else

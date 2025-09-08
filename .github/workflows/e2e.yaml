@@ -2,7 +2,6 @@ name: E2E Tests
 
 on:
   push:
-    branches: [ master, main ]
   pull_request:
     branches: [ master, main ]
 
@@ -45,17 +44,29 @@ jobs:
       run: |
         ./e2e/push-image.sh -k -d
 
-    - name: Run MPICH E2E test "pi"
+    - name: Run Mpich E2E tests "hello_world"
       run: |
-        ./e2e/run-mpi.sh mpich pi
-
-    - name: Run MPICH E2E test "hello_world"
-      run: |
+        kubectl get pods -A
         ./e2e/run-mpi.sh mpich hello_world
+        kubectl delete ns -l app=mpich
+
+    - name: Run Mpich E2E tests "pi"
+      run: |
+        kubectl get pods -A
+        ./e2e/run-mpi.sh mpich pi
+        kubectl delete ns -l app=mpich
+
+    - name: Run OpenMPI E2E tests "hello_world"
+      run: |
+        kubectl get pods -A
+        ./e2e/run-mpi.sh openmpi hello_world
+        kubectl delete ns -l app=openmpi
 
     - name: Run OpenMPI E2E tests "pi"
       run: |
+        kubectl get pods -A
         ./e2e/run-mpi.sh openmpi pi
+        kubectl delete ns -l app=openmpi
 
     - name: Cleanup
       if: always()
