@@ -5,7 +5,7 @@ resources:
   - namespace.yaml
   - mpijob.yaml
 
-namespace: openmpi-cluster
+namespace: ${NAMESPACE}
 
 commonLabels:
   app: openmpi
