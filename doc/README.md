@@ -39,16 +39,6 @@ Both examples follow the same pattern:
 - **Output**: Estimated π value with error calculation
 - **Guide**: [mpich.md](mpich.md)
 
-## Key Differences
-
-| Feature | OpenMPI | MPICH |
-|---------|---------|-------|
-| Application | Hello World | Pi calculation |
-| Worker Count | 3 | 2 |
-| SSH Port | 22 | 2222 |
-| User | root | mpiuser (1000) |
-| Command Flag | `-np` | `-n` |
-
 ## Common Operations
 
 ### Scaling Workers
